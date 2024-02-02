@@ -1,10 +1,9 @@
 package com.mindhub.homebanking.models;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Client {
@@ -14,6 +13,9 @@ public class Client {
     private Long id;
 
     private String firstName, lastName, email;
+
+    @OneToMany(mappedBy="accountHolder", fetch = FetchType.EAGER)
+    private List<Account> accounts = new ArrayList<>();
 
 
     // CONSTRUCTOR VACÍO
@@ -25,8 +27,8 @@ public class Client {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.accounts = accounts;
     }
-
 
     public Long getId() {
         return id;
@@ -57,6 +59,23 @@ public class Client {
         this.email = email;
     }
 
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
+    }
+
+
+    // GENERACIÓN DE UN MÉTODO PARA AGREGARLE CUENTAS AL OBJETO CLIENTE QUE ESTOY CREANDO
+    // EL CLIENTE QUE CREE VA A LLAMAR AL MÉTODO ADDACCOUNT PARA AGREGAR ESA CUENTA A LA LISTA DE CUENTAS
+    public void addAccount(Account account){
+        account.setAccountHolder(this);
+        this.accounts.add(account);
+    }
+
+
     @Override
     public String toString() {
         return "Client{" +
@@ -64,6 +83,7 @@ public class Client {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", accounts=" + accounts +
                 '}';
     }
 }

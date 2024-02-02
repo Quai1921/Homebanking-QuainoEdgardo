@@ -1,15 +1,21 @@
 package com.mindhub.homebanking.controllers;
 
 
+import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api/clients")
@@ -21,20 +27,49 @@ public class ClientController {
 
 
     // SERVLET = RESPONDER UNA PETICIÓN ESPECÍFICA
+//    @GetMapping("/")
+//    public List<Client> getAllClients(){
+//        return clientRepository.findAll();
+//    }
+
     @GetMapping("/")
-    public List<Client> getAllClients(){
-        return clientRepository.findAll();
+    public List<ClientDTO> getAllClients(){
+        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
+// USANDO LAMBDA
+//      return clientRepository.findAll().stream().map(ClientDTO::new).collect(toList());
     }
 
-    @GetMapping("/{id}")
-    public Client getOneClientById(@PathVariable Long id){
-        return clientRepository.findById(id).orElse(null);
+    @GetMapping("/all")
+    public ResponseEntity<List<ClientDTO>> getAllClients1(){
+        List<Client> clients = clientRepository.findAll();
+        return new ResponseEntity<>(clients.stream().map(ClientDTO::new).collect(toList()), HttpStatus.OK);
     }
+
+
+//    @GetMapping("/{id}")
+//    public Client getOneClientById(@PathVariable Long id){
+//        return clientRepository.findById(id).orElse(null);
+//    }
+
+    @GetMapping("/{id}")
+    public  ResponseEntity<?> getOneClientById(@PathVariable Long id){
+        Client client = clientRepository.findById(id).orElse(null);
+        if(client == null){
+            return new ResponseEntity<>("The user with Id: " + id + " is not found in the database.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ClientDTO(client), HttpStatus.OK);
+    }
+
 
     @GetMapping("/hello")
     public String getClients(){
         return "Hello Clients!";
     }
+
+
+
+
+
 
 //    MÉTODOS COMUNES DE ACCESO
 //    findAll: Returns all records of the entity.

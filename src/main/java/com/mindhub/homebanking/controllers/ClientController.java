@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -32,24 +31,27 @@ public class ClientController {
 //        return clientRepository.findAll();
 //    }
 
-    @GetMapping("/")
-    public List<ClientDTO> getAllClients(){
-        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
-// USANDO LAMBDA
+//    @GetMapping("/")
+//    public List<ClientDTO> getAllClients(){
+//        return clientRepository.findAll().stream().map(client -> new ClientDTO(client)).collect(toList());
+//      USANDO LAMBDA
 //      return clientRepository.findAll().stream().map(ClientDTO::new).collect(toList());
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<ClientDTO>> getAllClients1(){
-        List<Client> clients = clientRepository.findAll();
-        return new ResponseEntity<>(clients.stream().map(ClientDTO::new).collect(toList()), HttpStatus.OK);
-    }
+//    }
 
 
 //    @GetMapping("/{id}")
 //    public Client getOneClientById(@PathVariable Long id){
 //        return clientRepository.findById(id).orElse(null);
 //    }
+
+
+    @GetMapping("/")
+    public ResponseEntity<List<ClientDTO>> getAllClients1(){
+        List<Client> clients = clientRepository.findAll();
+        return new ResponseEntity<>(clients.stream().map(ClientDTO::new).collect(toList()), HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/{id}")
     public  ResponseEntity<?> getOneClientById(@PathVariable Long id){

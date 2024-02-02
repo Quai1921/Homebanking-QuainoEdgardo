@@ -23,6 +23,7 @@ public class Account {
     @JoinColumn(name = "client_id")
     private Client accountHolder;
 
+    @OneToMany(mappedBy="account", fetch = FetchType.EAGER)
     private List<Transaction> transactions = new ArrayList<>();
 
 
@@ -101,9 +102,14 @@ public class Account {
 //    }
 
 
-
-
-
-
-
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", creationDate=" + creationDate +
+                ", balance=" + balance +
+                ", transactions=" + transactions +
+                '}';
+    }
 }

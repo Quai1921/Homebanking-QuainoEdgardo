@@ -1,9 +1,6 @@
 package com.mindhub.homebanking.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
@@ -15,15 +12,15 @@ public class Transaction {
 
     private double amount;
 
-
     private String description;
 
     private LocalDateTime date;
 
     private TransactionType type;
 
-    private Transaction transaction;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
 
     public Transaction() {
@@ -73,12 +70,12 @@ public class Transaction {
     }
 
 
-    public Transaction getTransaction() {
-        return transaction;
+    public Account getTransaction() {
+        return account;
     }
 
     public void setTransaction(Account transaction) {
-        this.transaction = transaction;
+        this.account = transaction;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.mindhub.homebanking.dtos;
 
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.ClientLoan;
+import com.mindhub.homebanking.models.Loan;
 
 
 import java.util.List;
@@ -13,6 +15,8 @@ public class ClientDTO {
 
     private List<AccountDTO> accounts;
 
+    private List<ClientLoanDTO> clientLoans ;
+
 
     // CREO UN CONSTRUCTOR QUE RECIBE COMO PARÁMETRO EL OBJETO CLIENTE
     public ClientDTO(Client client) {
@@ -21,6 +25,7 @@ public class ClientDTO {
         this.lastName = client.getLastName();
         this.email = client.getEmail();
         this.accounts = client.getAccounts().stream().map(AccountDTO::new).collect(toList());
+        this.clientLoans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(toList());
         // OTRA MANERA DE DECLARARLO SIN LAMBDA
 //      this.accounts = client.getAccounts().stream().map(account -> new AccountDTO(account)).collect(toList());
 
@@ -47,5 +52,9 @@ public class ClientDTO {
 
     public List<AccountDTO> getAccounts() {
         return accounts;
+    }
+
+    public List<ClientLoanDTO> getLoans() {
+        return clientLoans;
     }
 }

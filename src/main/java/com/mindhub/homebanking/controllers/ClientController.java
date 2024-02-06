@@ -40,13 +40,14 @@ public class ClientController {
 
 
 //    @GetMapping("/{id}")
-//    public Client getOneClientById(@PathVariable Long id){
-//        return clientRepository.findById(id).orElse(null);
+//    public ClientDTO getOneClientById(@PathVariable Long id){
+//        Client client = clientRepository.findById(id).orElse(null);
+//        return new ClientDTO(client);
 //    }
 
 
     @GetMapping("/")
-    public ResponseEntity<List<ClientDTO>> getAllClients1(){
+    public ResponseEntity<List<ClientDTO>> getAllClients(){
         List<Client> clients = clientRepository.findAll();
         return new ResponseEntity<>(clients.stream().map(ClientDTO::new).collect(toList()), HttpStatus.OK);
     }

@@ -44,11 +44,11 @@ public class HomebankingApplication {
 			Loan personal = new Loan("Personal", 100000, List.of(6,12,24));
 			Loan automotive = new Loan("Automotive", 300000, List.of(6,12,24,36));
 
-			ClientLoan clientMorel1 = new ClientLoan(400000, 60, morel, mortgage);
-			ClientLoan clientMorel2 = new ClientLoan(50000, 12, morel, personal);
+			ClientLoan clientMorel1 = new ClientLoan(400000.0, 60, morel, mortgage);
+			ClientLoan clientMorel2 = new ClientLoan(50000.0, 12, morel, personal);
 
-			ClientLoan clientQuaino1 = new ClientLoan(100000, 24, quaino, personal);
-			ClientLoan clientQuaino2 = new ClientLoan(200000, 36, quaino, automotive);
+			ClientLoan clientQuaino1 = new ClientLoan(100000.0, 24, quaino, personal);
+			ClientLoan clientQuaino2 = new ClientLoan(200000.0, 36, quaino, automotive);
 
 
 			morel.addLoanToClient(clientMorel1);

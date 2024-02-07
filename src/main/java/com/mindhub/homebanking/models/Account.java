@@ -90,18 +90,6 @@ public class Account {
 
 
 
-
-//    @Override
-//    public String toString() {
-//        return "Account{" +
-//                "id=" + id +
-//                ", number='" + number + '\'' +
-//                ", creationDate=" + creationDate +
-//                ", balance=" + balance +
-//                '}';
-//    }
-
-
     @Override
     public String toString() {
         return "Account{" +

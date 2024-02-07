@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
 
 @Entity
 public class Loan {
@@ -77,14 +76,9 @@ public class Loan {
     // EL PRESTAMO QUE CREE, VA A LLAMAR AL MÉTODO ADDCLIENTWITHLOAN PARA AGREGAR ESE CLIENTE A LA LISTA DE CLIENTES
     public void addClientWithLoan(ClientLoan clientLoan){
         clientLoan.setLoan(this);
-        clientLoans.add(clientLoan);
+        this.clientLoans.add(clientLoan);
     }
 
-
-    // MÉTODO PARA DEVOLVER LA LISTA DE CLIENTES DE UN PRÉSTAMO
-//    public List<Client> getClients() {
-//        return clientLoans.stream().map(client -> client.getClientWithLoan()).collect(toList());
-//    }
 
     @Override
     public String toString() {
@@ -98,3 +92,9 @@ public class Loan {
 
 
 }
+
+
+// MÉTODO PARA DEVOLVER LA LISTA DE CLIENTES DE UN PRÉSTAMO
+//    public List<Client> getClients() {
+//        return clientLoans.stream().map(client -> client.getClientWithLoan()).collect(toList());
+//    }

@@ -5,7 +5,6 @@ import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.models.ClientLoan;
 import com.mindhub.homebanking.models.Loan;
 
-
 public class ClientLoanDTO {
 
     private Long id;
@@ -17,6 +16,10 @@ public class ClientLoanDTO {
     private double amount;
 
     private int payments;
+
+
+
+
 
 
 
@@ -47,4 +50,6 @@ public class ClientLoanDTO {
     public Long getLoanId() {
         return loanId;
     }
+
+
 }

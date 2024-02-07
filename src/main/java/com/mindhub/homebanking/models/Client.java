@@ -1,12 +1,11 @@
 package com.mindhub.homebanking.models;
 
 
-import com.mindhub.homebanking.dtos.ClientLoanDTO;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+
 
 @Entity
 public class Client {
@@ -95,7 +94,7 @@ public class Client {
     // EL CLIENTE QUE CREE, VA A LLAMAR AL MÉTODO ADDLOANTOCLIENT PARA AGREGAR ESE PRESTAMO A LA LISTA DE PRESTAMOS
     public void addLoanToClient(ClientLoan clientLoan){
         clientLoan.setClient(this);
-        clientLoans.add(clientLoan);
+        this.clientLoans.add(clientLoan);
     }
 
 
@@ -104,18 +103,6 @@ public class Client {
 //        return clientLoans.stream().map(client -> client.getLoanToClients()).collect(toList());
 //    }
 
-
-//    @Override
-//    public String toString() {
-//        return "Client{" +
-//                "id=" + id +
-//                ", firstName='" + firstName + '\'' +
-//                ", lastName='" + lastName + '\'' +
-//                ", email='" + email + '\'' +
-//                ", accounts=" + accounts +
-//                '}';
-//    }
-//
 
 
     @Override

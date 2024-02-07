@@ -74,7 +74,7 @@ public class Loan {
 
     // GENERACIÓN DE UN MÉTODO PARA AGREGARLE CLIENTES AL OBJETO PRESTAMO QUE ESTOY CREANDO
     // EL PRESTAMO QUE CREE, VA A LLAMAR AL MÉTODO ADDCLIENTWITHLOAN PARA AGREGAR ESE CLIENTE A LA LISTA DE CLIENTES
-    public void addClientWithLoan(ClientLoan clientLoan){
+    public void addClientLoan(ClientLoan clientLoan){
         clientLoan.setLoan(this);
         this.clientLoans.add(clientLoan);
     }

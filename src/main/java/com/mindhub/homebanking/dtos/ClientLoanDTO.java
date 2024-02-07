@@ -18,11 +18,6 @@ public class ClientLoanDTO {
     private int payments;
 
 
-
-
-
-
-
     public ClientLoanDTO(ClientLoan clientLoan) {
         this.id = clientLoan.getId();
         this.loanId = clientLoan.getLoan().getId();

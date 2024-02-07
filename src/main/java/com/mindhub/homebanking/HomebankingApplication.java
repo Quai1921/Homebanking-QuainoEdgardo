@@ -40,22 +40,29 @@ public class HomebankingApplication {
 			Transaction vin003Transaction02 = new Transaction(-500, "Transfer Sent", LocalDateTime.now(), TransactionType.DEBIT);
 			Transaction vin004Transaction01 = new Transaction(5000, "Transfer Received", LocalDateTime.now(), TransactionType.CREDIT);
 
+//			List <Integer> mortgage1 = List.of(12,24);
+
 			Loan mortgage = new Loan("Mortgage", 500000, List.of(12,24,36,48,60));
 			Loan personal = new Loan("Personal", 100000, List.of(6,12,24));
 			Loan automotive = new Loan("Automotive", 300000, List.of(6,12,24,36));
+			System.out.println();
 
-			ClientLoan clientMorel1 = new ClientLoan(400000.0, 60, morel, mortgage);
-			ClientLoan clientMorel2 = new ClientLoan(50000.0, 12, morel, personal);
+			ClientLoan clientMorel1 = new ClientLoan(400000.0, 60);
+			ClientLoan clientMorel2 = new ClientLoan(50000.0, 12);
 
-			ClientLoan clientQuaino1 = new ClientLoan(100000.0, 24, quaino, personal);
-			ClientLoan clientQuaino2 = new ClientLoan(200000.0, 36, quaino, automotive);
+			ClientLoan clientQuaino1 = new ClientLoan(100000.0, 24);
+			ClientLoan clientQuaino2 = new ClientLoan(200000.0, 36);
 
 
-			morel.addLoanToClient(clientMorel1);
-			morel.addLoanToClient(clientMorel2);
+			morel.addLoanClient(clientMorel1);
+			morel.addLoanClient(clientMorel2);
+			quaino.addLoanClient(clientQuaino1);
+			quaino.addLoanClient(clientQuaino2);
 
-			quaino.addLoanToClient(clientQuaino1);
-			quaino.addLoanToClient(clientQuaino2);
+			clientMorel1.setLoan(mortgage);
+			clientMorel2.setLoan(personal);
+			clientQuaino1.setLoan(personal);
+			clientQuaino2.setLoan(automotive);
 
 
 			morel.addAccount(morelAccount1);
@@ -99,6 +106,7 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientMorel2);
 			clientLoanRepository.save(clientQuaino1);
 			clientLoanRepository.save(clientQuaino2);
+
 
 
 			System.out.println(morel);

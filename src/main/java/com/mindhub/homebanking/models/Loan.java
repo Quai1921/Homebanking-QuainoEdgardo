@@ -23,7 +23,7 @@ public class Loan {
 
 
     @OneToMany(mappedBy="loan", fetch=FetchType.EAGER)
-    private List<ClientLoan> clientLoans;
+    private List<ClientLoan> clientLoans = new ArrayList<>();
 
 
     public Loan() {
@@ -78,6 +78,7 @@ public class Loan {
         clientLoan.setLoan(this);
         this.clientLoans.add(clientLoan);
     }
+
 
 
     @Override

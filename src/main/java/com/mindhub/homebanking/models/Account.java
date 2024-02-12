@@ -27,7 +27,6 @@ public class Account {
     private List<Transaction> transactions = new ArrayList<>();
 
 
-
     public Account() {
     }
 
@@ -35,7 +34,6 @@ public class Account {
         this.number = number;
         this.creationDate = creationDate;
         this.balance = balance;
-        this.transactions = transactions;
     }
 
     public Long getId() {
@@ -87,7 +85,6 @@ public class Account {
         transaction.setTransaction(this);
         this.transactions.add(transaction);
     }
-
 
 
     @Override

@@ -1,9 +1,7 @@
 package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.AccountDTO;
-import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.Account;
-import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +25,6 @@ public class AccountController {
     @GetMapping("/")
     public List<AccountDTO> getAllAccounts(){
         return accountRepository.findAll().stream().map(account -> new AccountDTO(account)).collect(toList());
-
     }
 
 

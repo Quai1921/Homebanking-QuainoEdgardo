@@ -19,7 +19,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository) {
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository) {
 		return args -> {
 
 			Client morel = new Client("Melba", "Morel", "melba@mindhub.com");
@@ -111,9 +111,33 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientQuaino2);
 
 
+			Card morelDebitCardGold = new Card(CardType.DEBIT, CardColor.GOLD, "4815-5009-0177-2190", "807", LocalDate.now());
+			Card morelCreditCardTitanium = new Card(CardType.CREDIT, CardColor.TITANIUM, "3625-8532-0845-0003", "009", LocalDate.now());
+
+			Card quainoCreditCardSilver = new Card(CardType.CREDIT, CardColor.SILVER, "1921-1492-0920-2198", "367", LocalDate.now());
+			Card quainoDebitCardTitanium = new Card(CardType.DEBIT, CardColor.TITANIUM, "2879-4569-0514-3214", "963", LocalDate.now());
+
+			// OTRA OPCIÓN SETARLE LOS NOMBRES UNA VEZ CREADA LA CARD. HAY QUE REMOVER LA ÚLTIMA LINEA DEL MÉTODO addCardClient.
+			// morel.addCardClient(morelDebitCardGold);
+			// morelDebitCardGold.setCardholder(morelDebitCardGold.getClient().getFirstName() + " " + morelDebitCardGold.getClient().getLastName());
+
+			morel.addCardClient(morelDebitCardGold);
+			morel.addCardClient(morelCreditCardTitanium);
+
+			quaino.addCardClient(quainoCreditCardSilver);
+			quaino.addCardClient(quainoDebitCardTitanium);
+
+			cardRepository.save(morelDebitCardGold);
+			cardRepository.save(morelCreditCardTitanium);
+			cardRepository.save(quainoCreditCardSilver);
+			cardRepository.save(quainoDebitCardTitanium);
+
+
 
 			System.out.println(morel);
 			System.out.println(quaino);
+
+
 
 
 		};

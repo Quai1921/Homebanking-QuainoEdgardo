@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 @Entity
 public class Client {
 
@@ -21,6 +20,10 @@ public class Client {
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private List<ClientLoan> clientLoans = new ArrayList<>();
+
+
+    @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
+    private List<Card> cards = new ArrayList<>();
 
 
     // CONSTRUCTOR VACÍO
@@ -82,6 +85,14 @@ public class Client {
     }
 
 
+    public List<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
+
     // GENERACIÓN DE UN MÉTODO PARA AGREGARLE CUENTAS AL OBJETO CLIENTE QUE ESTOY CREANDO
     // EL CLIENTE QUE CREE VA A LLAMAR AL MÉTODO ADDACCOUNT PARA AGREGAR ESA CUENTA A LA LISTA DE CUENTAS
     public void addAccount(Account account){
@@ -91,17 +102,34 @@ public class Client {
 
 
     // GENERACIÓN DE UN MÉTODO PARA AGREGARLE PRÉSTAMOS AL OBJETO CLIENTE QUE ESTOY CREANDO
-    // EL CLIENTE QUE CREE, VA A LLAMAR AL MÉTODO ADDLOANTOCLIENT PARA AGREGAR ESE PRESTAMO A LA LISTA DE PRESTAMOS
+    // EL CLIENTE QUE CREE, VA A LLAMAR AL MÉTODO ADDLOANCLIENT PARA AGREGAR ESE PRESTAMO A LA LISTA DE PRESTAMOS
     public void addLoanClient(ClientLoan clientLoan){
         clientLoan.setClient(this);
         this.clientLoans.add(clientLoan);
     }
 
 
+
+    // GENERACIÓN DE UN MÉTODO PARA AGREGARLE TARJETAS AL OBJETO CLIENTE QUE ESTOY CREANDO
+    // A LA CARD LE SETEO EL NOMBRE Y EL APELLIDO
+    // EL CLIENTE QUE CREE, VA A LLAMAR AL MÉTODO ADDCARDCLIENT PARA AGREGAR ESA TARJETA A LA LISTA DE TARJETAS
+    //
+
+    public void addCardClient(Card card){
+        card.setClient(this);
+        this.cards.add(card);
+        card.setCardholder(card.getClient().getFirstName() + " " + card.getClient().getLastName());
+    }
+
+
+
+
     // MÉTODO PARA DEVOLVER LA LISTA DE PRESTAMOS DE UN CLIENTE
 //    public List<Loan> getLoans() {
 //        return clientLoans.stream().map(client -> client.getLoanToClients()).collect(toList());
 //    }
+
+
 
 
 
@@ -114,6 +142,7 @@ public class Client {
                 ", email='" + email + '\'' +
                 ", accounts=" + accounts +
                 ", clientLoans=" + clientLoans +
+                ", cards=" + cards +
                 '}';
     }
 }

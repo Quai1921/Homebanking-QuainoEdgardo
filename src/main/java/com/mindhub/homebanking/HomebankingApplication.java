@@ -2,10 +2,14 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +17,8 @@ import java.util.List;
 
 @SpringBootApplication
 public class HomebankingApplication {
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
@@ -22,11 +28,13 @@ public class HomebankingApplication {
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository) {
 		return args -> {
 
-			Client morel = new Client("Melba", "Morel", "melba@mindhub.com");
-			Client quaino = new Client("Edgardo", "Quaino", "equaino.ir@gmail.com");
+			Client morel = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("Melba1234"));
+			Client quaino = new Client("Edgardo", "Quaino", "equaino.ir@gmail.com", passwordEncoder.encode("Edgardo1234"));
+			Client pilsel = new Client("Malen", "Pilsel", "mpilsel@gmail.com", passwordEncoder.encode("Malen1234"));
 
 			clientRepository.save(morel);
 			clientRepository.save(quaino);
+			clientRepository.save(pilsel);
 
 
 			Account morelAccount1 = new Account("VIN001", LocalDate.now(), 5000.00);
@@ -121,6 +129,21 @@ public class HomebankingApplication {
 			// morel.addCardClient(morelDebitCardGold);
 			// morelDebitCardGold.setCardholder(morelDebitCardGold.getClient().getFirstName() + " " + morelDebitCardGold.getClient().getLastName());
 
+//			Card DebitCardGold = new Card(CardType.DEBIT, CardColor.GOLD, "0000-0000-0000-0000", "000", LocalDate.now());
+//			Card CreditCardGold = new Card(CardType.CREDIT, CardColor.GOLD, "0000-0000-0000-0000", "000", LocalDate.now());
+//			Card DebitCardSilver = new Card(CardType.DEBIT, CardColor.SILVER, "0000-0000-0000-0000", "000", LocalDate.now());
+//			Card CreditCardSilver = new Card(CardType.CREDIT, CardColor.SILVER, "0000-0000-0000-0000", "000", LocalDate.now());
+//			Card DebitCardTitanium = new Card(CardType.DEBIT, CardColor.TITANIUM, "0000-0000-0000-0000", "000", LocalDate.now());
+//			Card CreditCardTitanium = new Card(CardType.CREDIT, CardColor.TITANIUM, "0000-0000-0000-0000", "000", LocalDate.now());
+//
+//			cardRepository.save(DebitCardGold);
+//			cardRepository.save(CreditCardGold);
+//			cardRepository.save(DebitCardSilver);
+//			cardRepository.save(CreditCardSilver);
+//			cardRepository.save(DebitCardTitanium);
+//			cardRepository.save(CreditCardTitanium);
+
+
 			morel.addCardClient(morelDebitCardGold);
 			morel.addCardClient(morelCreditCardTitanium);
 
@@ -136,6 +159,9 @@ public class HomebankingApplication {
 
 			System.out.println(morel);
 			System.out.println(quaino);
+
+
+
 
 
 

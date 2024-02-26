@@ -13,7 +13,7 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName, lastName, email;
+    private String firstName, lastName, email, password;
 
     @OneToMany(mappedBy="accountHolder", fetch = FetchType.EAGER)
     private List<Account> accounts = new ArrayList<>();
@@ -31,10 +31,11 @@ public class Client {
     }
 
     // CONSTRUCTOR SIN ID PORQUE SE VA A GENERAR DESDE LA BASE DE DATOS
-    public Client(String firstName, String lastName, String email) {
+    public Client(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -75,7 +76,6 @@ public class Client {
     }
 
 
-    // VER SI VAN
     public List<ClientLoan> getClientLoans() {
         return clientLoans;
     }
@@ -91,6 +91,15 @@ public class Client {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     // GENERACIÓN DE UN MÉTODO PARA AGREGARLE CUENTAS AL OBJETO CLIENTE QUE ESTOY CREANDO
@@ -143,6 +152,7 @@ public class Client {
                 ", accounts=" + accounts +
                 ", clientLoans=" + clientLoans +
                 ", cards=" + cards +
+//                ", password=" + password +
                 '}';
     }
 }

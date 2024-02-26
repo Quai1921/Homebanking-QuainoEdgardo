@@ -26,6 +26,7 @@ public class ClientDTO {
         this.firstName = client.getFirstName();
         this.lastName = client.getLastName();
         this.email = client.getEmail();
+//        this.password = client.getPassword();
         this.accounts = client.getAccounts().stream().map(AccountDTO::new).collect(toList());
         this.loans = client.getClientLoans().stream().map(ClientLoanDTO::new).collect(toList());
         this.cards = client.getCards().stream().map(card -> new CardDTO(card)).collect(toList());
@@ -50,6 +51,10 @@ public class ClientDTO {
     public String getEmail() {
         return email;
     }
+
+//    public String getPassword() {
+//        return password;
+//    }
 
     public List<AccountDTO> getAccounts() {
         return accounts;

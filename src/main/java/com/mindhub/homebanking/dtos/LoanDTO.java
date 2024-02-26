@@ -8,6 +8,8 @@ import com.mindhub.homebanking.models.Loan;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 
 public class LoanDTO {
 
@@ -20,7 +22,7 @@ public class LoanDTO {
     private List<Integer> payments = new ArrayList<>();
 
 
-    private List<ClientLoan> clientLoans;
+//    private List<ClientLoanDTO> clientLoans;
 
 
     public LoanDTO(Loan loan) {
@@ -28,7 +30,7 @@ public class LoanDTO {
         this.name = loan.getName();
         this.maxAmount = loan.getMaxAmount();
         this.payments = loan.getPayments();
-        this.clientLoans = loan.getClientLoans();
+//        this.clientLoans = loan.getClientLoans().stream().map(ClientLoanDTO::new).collect(toList());
     }
 
     public Long getId() {
@@ -47,7 +49,7 @@ public class LoanDTO {
         return payments;
     }
 
-    public List<ClientLoan> getClientLoans() {
-        return clientLoans;
-    }
+//    public List<ClientLoanDTO> getClientLoans() {
+//        return clientLoans;
+//    }
 }

@@ -25,13 +25,12 @@ public class JwtUtilService {
 
     //  EXTRAEMOS TODOS LOS CLAIMS, QUE ES LO QUE ESTÁ EN EL CUERPO DEL TOKEN -INFO DEL USUARIO-), PARA LUEGO QUEDARME
     //  CON EL QUE NECESITE. HAGO UN PARSER PARA VERIFICAR LA SECRET KEY (PORQUE NO ES EL MISMO TIPO DE DATO).
-    //  DESPUÉS LO CONSTRUYO
-    // PARSEO LOS CLAIMS CON EL TOKEN Y ME LO DEVUELVE DEL PAYLOAD (CUERPO DEL JWT)
+    //  DESPUÉS LO CONSTRUYO. PARSEO LOS CLAIMS CON EL TOKEN Y ME LO DEVUELVE DEL PAYLOAD (CUERPO DEL JWT)
     public Claims extractAllClaims(String token) {
         return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
     }
 
-    // <T> TIPO DE DATO GENÉRICO, NO SE EL TIPO DE DATO. A LOS CLAIMS, EXTRAITO TODOS CON EL MÉTODO EXTRACT CLAIM
+    // <T> TIPO DE DATO GENÉRICO, NO SE EL TIPO DE DATO. A LOS CLAIMS, EXTRAIGO TODOS CON EL MÉTODO EXTRACT CLAIM
     // Y DESPUÉS ME QUEDO CON UNO EN PARTICULAR
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
@@ -56,9 +55,7 @@ public class JwtUtilService {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    // ESTE MÉTODO NOS DEVUELVE EL TOKEN.
-    // USERDETAILS ES UNA INTERFAZ
-    // MAP PORQUE ES CLAVE/VALOR Y GUARDO ESPACIO EN MEMORIA
+    // ESTE MÉTODO NOS DEVUELVE EL TOKEN. USERDETAILS ES UNA INTERFAZ. MAP PORQUE ES CLAVE/VALOR Y GUARDO ESPACIO EN MEMORIA
     // ACÁ AGREGO LOS DATOS QUE CONSIDERE ÚTILES
     public String generateToken(UserDetails userDetails){
         Map<String, Object> claims = new HashMap<>();

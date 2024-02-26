@@ -66,23 +66,31 @@ public class AuthController {
     try {
         // VALIDACIONES PARA REGISTRARSE
         if(registerDTO.firstName().isBlank()){
-            return new ResponseEntity<>("The first name field cannot be empty ", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The first name field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
         if(registerDTO.lastName().isBlank()){
-            return new ResponseEntity<>("The last name field cannot be empty ", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The last name field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
         if(registerDTO.email().isBlank()){
-            return new ResponseEntity<>("The email field cannot be empty ", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The email field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
         if(registerDTO.password().isBlank()){
-            return new ResponseEntity<>("The password field cannot be empty ", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The password field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
         if(clientRepository.findByEmail(registerDTO.email()) != null){
             return new ResponseEntity<>("The email entered already exists in the database", HttpStatus.FORBIDDEN);
+        }
+
+        if(registerDTO.password().length() < 8){
+            return new ResponseEntity<>("Password must be at least 8 characters", HttpStatus.FORBIDDEN);
+        }
+
+        if(registerDTO.password().contains("@")){
+            return new ResponseEntity<>("The email entered is not valid", HttpStatus.FORBIDDEN);
         }
 
         Client client = new Client(

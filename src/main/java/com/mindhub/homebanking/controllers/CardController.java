@@ -66,7 +66,7 @@ public class CardController {
                        + String.format("%04d", randomNumber.getRandomNumber(0, 1001));
         } while (cardRepository.findByNumber(cardNumber) != null);
 
-        String cvv = String.format("%03d", randomNumber.getRandomNumber(0, 1001));
+        String cvv = String.format("%03d", randomNumber.getRandomNumber(0, 1000));
 
 
 

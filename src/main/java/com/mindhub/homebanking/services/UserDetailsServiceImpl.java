@@ -15,7 +15,7 @@ public class UserDetailsServiceImpl  implements UserDetailsService {
     @Autowired
     private ClientRepository clientRepository;
 
-    // CLASE USER DE USERDETAILS
+    // CLASE USER DE USERDETAILS, USUARIO EN EL CONTEXTO DE LA APP
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Client client = clientRepository.findByEmail(username);

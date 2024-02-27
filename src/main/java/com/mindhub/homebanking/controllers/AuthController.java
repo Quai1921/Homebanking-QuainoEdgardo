@@ -1,13 +1,15 @@
 package com.mindhub.homebanking.controllers;
 
 
-import com.mindhub.homebanking.dtos.CardDTO;
-import com.mindhub.homebanking.dtos.ClientDTO;
+
 import com.mindhub.homebanking.dtos.LoginDTO;
 import com.mindhub.homebanking.dtos.RegisterDTO;
+import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.JwtUtilService;
+import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -36,7 +40,13 @@ public class AuthController {
     private ClientRepository clientRepository;
 
     @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RandomNumberGenerator randomNumber;
 
 
     @PostMapping("/login")
@@ -97,8 +107,34 @@ public class AuthController {
                 registerDTO.firstName(),
                 registerDTO.lastName(),
                 registerDTO.email(),
-                passwordEncoder.encode(registerDTO.password()));
+                passwordEncoder.encode(registerDTO.password())
+        );
+
+
+        
+//      CON UN DO WHILE
+        String accountNumber;
+        do {
+            accountNumber = "VIN" + randomNumber.getRandomNumber(0, 99999999);
+        } while (accountRepository.findByNumber(accountNumber) != null);
+
+
+//        CON UN WHILE
+//        String accountNumber = "VIN" + randomNumber.getRandomNumber(0,99999999);
+//
+//        while (accountRepository.findByNumber(accountNumber) != null){
+//            accountNumber = "VIN" + randomNumber.getRandomNumber(1, 99999999);
+//        }
+
+
+
+        Account account = new Account(accountNumber, LocalDate.now(), 0);
+
+
+        client.addAccount(account);
         clientRepository.save(client);
+        accountRepository.save(account);
+
         return new ResponseEntity<> ("Client created", HttpStatus.CREATED);
 
     } catch (Exception e){
@@ -114,10 +150,5 @@ public class AuthController {
 
     }
 
-    @GetMapping("/current")
-    public ResponseEntity<?> getClient(){
-        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Client client = clientRepository.findByEmail(userMail);
-        return ResponseEntity.ok(new ClientDTO(client));
-    }
+
 }

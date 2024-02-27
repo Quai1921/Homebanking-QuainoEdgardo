@@ -9,7 +9,6 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Service
@@ -30,8 +29,7 @@ public class JwtUtilService {
         return Jwts.parser().verifyWith(SECRET_KEY).build().parseSignedClaims(token).getPayload();
     }
 
-    // <T> TIPO DE DATO GENÉRICO, NO SE EL TIPO DE DATO. A LOS CLAIMS, EXTRAIGO TODOS CON EL MÉTODO EXTRACT CLAIM
-    // Y DESPUÉS ME QUEDO CON UNO EN PARTICULAR
+    // <T> TIPO DE DATO GENÉRICO. A LOS CLAIMS, EXTRAIGO TODOS Y ME QUEDO CON UNO EN PARTICULAR
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

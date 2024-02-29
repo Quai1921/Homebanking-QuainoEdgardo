@@ -1,6 +1,7 @@
 package com.mindhub.homebanking.repositories;
 
 import com.mindhub.homebanking.models.Account;
+import com.mindhub.homebanking.models.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 
     Account findByNumber(String number);
+
+    Boolean existsByNumberAndAccountHolder(String number, Client accountHolder);
 
 }
 

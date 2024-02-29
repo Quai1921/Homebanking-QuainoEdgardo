@@ -35,7 +35,8 @@ public class WebConfig {
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/login", "/api/auth/register","/h2-console/**").permitAll()
-                        .requestMatchers("/api/clients/current", "/api/clients/current/accounts", "/api/clients/current/cards" ).hasRole("CLIENT")
+                        .requestMatchers("/api/clients/current", "/api/clients/current/accounts", "/api/clients/current/cards",
+                                                  "/api/clients/current/transactions", "/api/clients/current/transactions/credit" ).hasRole("CLIENT")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManegment -> sessionManegment

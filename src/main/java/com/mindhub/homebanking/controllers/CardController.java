@@ -3,8 +3,7 @@ package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.CardDTO;
 import com.mindhub.homebanking.dtos.CardRequestDTO;
-import com.mindhub.homebanking.models.Card;
-import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.CardRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
@@ -49,11 +48,28 @@ public class CardController {
         String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
         Client client = clientRepository.findByEmail(userMail);
 
-        List<Card> cards = client.getCards();
 
-        List <Boolean> cardsTypeColor = cards.stream().map(card -> card.getType() == cardRequestDTO.type() && card.getColor() == cardRequestDTO.color()).toList();
 
-        if(cardsTypeColor.contains(true)){
+        if(cardRequestDTO.type().isBlank()){
+            return new ResponseEntity<>("The type field cannot be empty", HttpStatus.FORBIDDEN);
+
+        }
+
+        if(cardRequestDTO.color().isBlank()){
+            return new ResponseEntity<>("The color field cannot be empty", HttpStatus.FORBIDDEN);
+        }
+
+
+//        OTRA MANERA DE COMPROBAR SI EXISTEN LAS TARJETAS
+//        List<Card> cards = client.getCards();
+//        List <Boolean> cardsTypeColor = cards.stream().map(card -> card.getType() == CardType.valueOf(cardRequestDTO.type()) && card.getColor()== CardColor.valueOf(cardRequestDTO.color())).toList();
+//        if(cardsTypeColor.contains(true)){
+//            return new ResponseEntity<>("You already have one card with type " + cardRequestDTO.type() + " and color " + cardRequestDTO.color(), HttpStatus.FORBIDDEN);
+//        }
+
+        Boolean cardExist = cardRepository.existsCardByTypeAndColorAndClient(CardType.valueOf(cardRequestDTO.type()), CardColor.valueOf(cardRequestDTO.color()), client);
+
+        if(cardExist){
             return new ResponseEntity<>("You already have one card with type " + cardRequestDTO.type() + " and color " + cardRequestDTO.color(), HttpStatus.FORBIDDEN);
         }
 
@@ -70,7 +86,7 @@ public class CardController {
 
 
 
-        Card card = new Card(cardRequestDTO.type(), cardRequestDTO.color(), cardNumber, cvv, LocalDate.now());
+        Card card = new Card(CardType.valueOf(cardRequestDTO.type()), CardColor.valueOf(cardRequestDTO.color()), cardNumber, cvv, LocalDate.now());
         client.addCardClient(card);
         clientRepository.save(client);
         cardRepository.save(card);

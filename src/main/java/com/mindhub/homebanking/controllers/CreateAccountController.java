@@ -56,8 +56,6 @@ public class CreateAccountController {
             } while (accountRepository.findByNumber(accountNumber) != null);
 
 
-
-
             Account account = new Account(accountNumber, LocalDate.now(), 0);
             client.addAccount(account);
             clientRepository.save(client);

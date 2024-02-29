@@ -49,7 +49,24 @@ public class TransactionController {
 
 
         if(transactionRequestDTO.numberDebit().isBlank()){
-            return new ResponseEntity<>("The account field cannot be empty", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The origin account field cannot be empty", HttpStatus.FORBIDDEN);
+        }
+
+
+        if(transactionRequestDTO.numberCredit().isBlank()){
+            return new ResponseEntity<>("The destination account field cannot be empty", HttpStatus.FORBIDDEN);
+        }
+
+
+//        OTRA MANERA DE HACERLO
+//        if(!client.getAccounts().stream().anyMatch(account -> account.getNumber().equals(transactionRequestDTO.numberDebit()))){
+//            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
+//        }
+
+        Boolean accountExist = accountRepository.existsByNumberAndAccountHolder(transactionRequestDTO.numberDebit(), client);
+
+        if(!accountExist){
+            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
         }
 
 
@@ -63,19 +80,7 @@ public class TransactionController {
             return new ResponseEntity<>("Invalid operation. The accounts entered are the same", HttpStatus.FORBIDDEN);
         }
 
-
-//        OTRA MANERA DE HACERLO
-//        if(!client.getAccounts().stream().anyMatch(account -> account.getNumber().equals(transactionRequestDTO.numberDebit()))){
-//            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
-//        }
-
-
-        Boolean accountExist = accountRepository.existsByNumberAndAccountHolder(transactionRequestDTO.numberDebit(), client);
-
-        if(!accountExist){
-            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
-        }
-
+        
         Account accountDebit = accountRepository.findByNumber(transactionRequestDTO.numberDebit());
 
         if(accountDebit.getBalance() < transactionRequestDTO.amount()){

@@ -8,7 +8,8 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.services.JwtUtilService;
+import com.mindhub.homebanking.securityServices.JwtUtilService;
+import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,8 @@ public class AuthController {
     @Autowired
     private JwtUtilService jwtUtilService;
 
-    @Autowired
-    private ClientRepository clientRepository;
+//    @Autowired
+//    private ClientRepository clientRepository;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -49,14 +50,20 @@ public class AuthController {
     private RandomNumberGenerator randomNumber;
 
 
+    @Autowired
+    private ClientService clientService;
+
+
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
+
+        Client client = clientService.getClientByEmail(loginDTO.email());
         try {
-            if(clientRepository.findByEmail(loginDTO.email()) == null){
+            if(client == null){
                 return new ResponseEntity<>("The email entered is not valid", HttpStatus.FORBIDDEN);
             }
 
-            if(!passwordEncoder.matches(loginDTO.password(), clientRepository.findByEmail(loginDTO.email()).getPassword())) {
+            if(!passwordEncoder.matches(loginDTO.password(), client.getPassword())) {
                 return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
             }
 
@@ -91,7 +98,7 @@ public class AuthController {
             return new ResponseEntity<>("The password field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
-        if(clientRepository.findByEmail(registerDTO.email()) != null){
+        if(clientService.getClientByEmail(registerDTO.email()) != null){
             return new ResponseEntity<>("The email entered already exists in the database", HttpStatus.FORBIDDEN);
         }
 
@@ -132,7 +139,7 @@ public class AuthController {
 
 
         client.addAccount(account);
-        clientRepository.save(client);
+        clientService.saveClient(client);
         accountRepository.save(account);
 
         return new ResponseEntity<> ("Client created", HttpStatus.CREATED);

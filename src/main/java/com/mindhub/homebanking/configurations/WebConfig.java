@@ -36,7 +36,7 @@ public class WebConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/auth/login", "/api/auth/register","/h2-console/**").permitAll()
                         .requestMatchers("/api/clients/current", "/api/clients/current/accounts", "/api/clients/current/cards",
-                                                  "/api/clients/current/transactions", "/api/clients/current/transactions/credit" ).hasRole("CLIENT")
+                                                  "/api/clients/current/transactions", "/api/clients/current/loans").hasRole("CLIENT")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManegment -> sessionManegment

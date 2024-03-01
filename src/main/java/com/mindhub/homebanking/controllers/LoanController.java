@@ -27,4 +27,6 @@ public class LoanController {
         return loanRepository.findAll().stream().map(loan -> new LoanDTO(loan)).collect(toList());
     }
 
+
+
 }

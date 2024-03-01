@@ -80,7 +80,7 @@ public class TransactionController {
             return new ResponseEntity<>("Invalid operation. The accounts entered are the same", HttpStatus.FORBIDDEN);
         }
 
-        
+
         Account accountDebit = accountRepository.findByNumber(transactionRequestDTO.numberDebit());
 
         if(accountDebit.getBalance() < transactionRequestDTO.amount()){

@@ -4,6 +4,7 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import static java.util.stream.Collectors.toList;
 @CrossOrigin(origins = "*")
 public class ClientController {
 
-    // INYECCIÓN DE DEPENDENCIAS (ALGO DEL CONTEXTO DE SPRING)
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
+
+    // INYECCIÓN DE DEPENDENCIAS (ALGO DEL CONTEXTO DE SPRING)
+//    @Autowired
+//    private ClientRepository clientRepository;
 
 
     // SERVLET = RESPONDER UNA PETICIÓN ESPECÍFICA
@@ -47,19 +51,21 @@ public class ClientController {
 
     @GetMapping("/")
     public ResponseEntity<List<ClientDTO>> getAllClients(){
-        List<Client> clients = clientRepository.findAll();
-        return new ResponseEntity<>(clients.stream().map(client -> new ClientDTO(client)).collect(toList()), HttpStatus.OK);
+        return new ResponseEntity<>(clientService.getAllClientsDTO(), HttpStatus.OK);
+
+//        List<Client> clients = clientRepository.findAll();
+//        return new ResponseEntity<>(clients.stream().map(client -> new ClientDTO(client)).collect(toList()), HttpStatus.OK);
     }
 
 
 
     @GetMapping("/{id}")
     public  ResponseEntity<?> getOneClientById(@PathVariable Long id){
-        Client client = clientRepository.findById(id).orElse(null);
+        Client client = clientService.getClientById(id);
         if(client == null){
             return new ResponseEntity<>("The user with Id: " + id + " is not found in the database.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(new ClientDTO(client), HttpStatus.OK);
+        return new ResponseEntity<>(client, HttpStatus.OK);
     }
 
 
@@ -73,7 +79,7 @@ public class ClientController {
     @GetMapping("/current")
     public ResponseEntity<?> getClient(){
         String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Client client = clientRepository.findByEmail(userMail);
+        Client client = clientService.getClientByEmail(userMail);
         return ResponseEntity.ok(new ClientDTO(client));
     }
 

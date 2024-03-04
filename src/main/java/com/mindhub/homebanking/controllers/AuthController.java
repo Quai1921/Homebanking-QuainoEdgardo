@@ -6,9 +6,8 @@ import com.mindhub.homebanking.dtos.LoginDTO;
 import com.mindhub.homebanking.dtos.RegisterDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.securityServices.JwtUtilService;
+import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDate;
 
 @RestController
@@ -37,40 +35,34 @@ public class AuthController {
     @Autowired
     private JwtUtilService jwtUtilService;
 
-//    @Autowired
-//    private ClientRepository clientRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private RandomNumberGenerator randomNumber;
 
-
     @Autowired
     private ClientService clientService;
+
+    @Autowired
+    private AccountService accountService;
 
 
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginDTO loginDTO){
 
         Client client = clientService.getClientByEmail(loginDTO.email());
-        try {
-            if(client == null){
-                return new ResponseEntity<>("The email entered is not valid", HttpStatus.FORBIDDEN);
-            }
 
-            if(!passwordEncoder.matches(loginDTO.password(), client.getPassword())) {
-                return new ResponseEntity<>("The password entered is not valid", HttpStatus.FORBIDDEN);
+        try {
+            if(client == null || !passwordEncoder.matches(loginDTO.password(), client.getPassword())){
+                return new ResponseEntity<>("The email or password entered is not valid", HttpStatus.FORBIDDEN);
             }
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.email(), loginDTO.password()));
             final UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.email());
             final String jwt = jwtUtilService.generateToken(userDetails);
             return ResponseEntity.ok(jwt);
+
         }catch (Exception e){
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -81,7 +73,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register (@RequestBody RegisterDTO registerDTO){
     try {
-        // VALIDACIONES PARA REGISTRARSE
+
         if(registerDTO.firstName().isBlank()){
             return new ResponseEntity<>("The first name field cannot be empty", HttpStatus.FORBIDDEN);
         }
@@ -118,21 +110,11 @@ public class AuthController {
         );
 
 
-        
-//      CON UN DO WHILE
+
         String accountNumber;
         do {
             accountNumber = "VIN" + randomNumber.getRandomNumber(0, 99999999);
-        } while (accountRepository.findByNumber(accountNumber) != null);
-
-
-//        CON UN WHILE
-//        String accountNumber = "VIN" + randomNumber.getRandomNumber(0,99999999);
-//
-//        while (accountRepository.findByNumber(accountNumber) != null){
-//            accountNumber = "VIN" + randomNumber.getRandomNumber(1, 99999999);
-//        }
-
+        } while (accountService.getAccountByNumber(accountNumber) != null);
 
 
         Account account = new Account(accountNumber, LocalDate.now(), 0);
@@ -140,7 +122,7 @@ public class AuthController {
 
         client.addAccount(account);
         clientService.saveClient(client);
-        accountRepository.save(account);
+        accountService.saveAccount(account);
 
         return new ResponseEntity<> ("Client created", HttpStatus.CREATED);
 
@@ -149,6 +131,7 @@ public class AuthController {
     }
 
     }
+
 
     @GetMapping("/test")
     public ResponseEntity<?> test(){
@@ -159,3 +142,24 @@ public class AuthController {
 
 
 }
+
+
+//    @Autowired
+//    private ClientRepository clientRepository;
+
+
+//    @Autowired
+//    private AccountRepository accountRepository;
+
+
+//        CON UN WHILE
+//        String accountNumber = "VIN" + randomNumber.getRandomNumber(0,99999999);
+//
+//        while (accountRepository.findByNumber(accountNumber) != null){
+//            accountNumber = "VIN" + randomNumber.getRandomNumber(1, 99999999);
+//        }
+
+
+//            if(!passwordEncoder.matches(loginDTO.password(), client.getPassword())) {
+//                return new ResponseEntity<>("The email or password entered is not valid", HttpStatus.FORBIDDEN);
+//            }

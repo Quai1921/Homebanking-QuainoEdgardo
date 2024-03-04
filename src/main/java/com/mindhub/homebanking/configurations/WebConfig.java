@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 public class WebConfig {
 
@@ -34,7 +35,7 @@ public class WebConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/login", "/api/auth/register","/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register","/h2-console/**", "api/loans").permitAll()
                         .requestMatchers("/api/clients/current", "/api/clients/current/accounts", "/api/clients/current/cards",
                                                   "/api/clients/current/transactions", "/api/clients/current/loans").hasRole("CLIENT")
                         .anyRequest().authenticated())
@@ -57,5 +58,6 @@ public class WebConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
         return authenticationConfiguration.getAuthenticationManager();
     }
+
 
 }

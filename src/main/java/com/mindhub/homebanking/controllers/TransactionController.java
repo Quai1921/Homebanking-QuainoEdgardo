@@ -6,6 +6,9 @@ import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,24 +22,23 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/clients/current")
-@CrossOrigin(origins = "*")
 public class TransactionController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
 
 
     @Transactional
     @PostMapping("/transactions")
     public ResponseEntity<?> createTransactionCredit (@RequestBody TransactionRequestDTO transactionRequestDTO){
         String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Client client = clientRepository.findByEmail(userMail);
+        Client client = clientService.getClientByEmail(userMail);
 
 
         if(transactionRequestDTO.description().isBlank()){
@@ -58,19 +60,16 @@ public class TransactionController {
         }
 
 
-//        OTRA MANERA DE HACERLO
-//        if(!client.getAccounts().stream().anyMatch(account -> account.getNumber().equals(transactionRequestDTO.numberDebit()))){
-//            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
-//        }
 
-        Boolean accountExist = accountRepository.existsByNumberAndAccountHolder(transactionRequestDTO.numberDebit(), client);
+
+        Boolean accountExist = accountService.getAccountByNumberAndAccountHolder(transactionRequestDTO.numberDebit(), client);
 
         if(!accountExist){
             return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
         }
 
 
-        Account accountCredit = accountRepository.findByNumber(transactionRequestDTO.numberCredit());
+        Account accountCredit = accountService.getAccountByNumber(transactionRequestDTO.numberCredit());
 
         if(accountCredit == null){
             return new ResponseEntity<>("The account entered does not exist", HttpStatus.FORBIDDEN);
@@ -81,7 +80,7 @@ public class TransactionController {
         }
 
 
-        Account accountDebit = accountRepository.findByNumber(transactionRequestDTO.numberDebit());
+        Account accountDebit = accountService.getAccountByNumber(transactionRequestDTO.numberDebit());
 
         if(accountDebit.getBalance() < transactionRequestDTO.amount()){
             return new ResponseEntity<>("Insufficient funds. Please indicate a valid amount", HttpStatus.FORBIDDEN);
@@ -94,11 +93,11 @@ public class TransactionController {
         Transaction transactionCredit = new Transaction(transactionRequestDTO.amount(), transactionRequestDTO.description(), LocalDateTime.now(), TransactionType.CREDIT);
         accountDebit.addTransaction(transactionDebit);
         accountCredit.addTransaction(transactionCredit);
-        clientRepository.save(client);
-        accountRepository.save(accountDebit);
-        accountRepository.save(accountCredit);
-        transactionRepository.save(transactionDebit);
-        transactionRepository.save(transactionCredit);
+        clientService.saveClient(client);
+        accountService.saveAccount(accountDebit);
+        accountService.saveAccount(accountCredit);
+        transactionService.saveTransaction(transactionDebit);
+        transactionService.saveTransaction(transactionCredit);
 
 
         return new ResponseEntity<>("Transaction created", HttpStatus.CREATED);
@@ -108,3 +107,28 @@ public class TransactionController {
 
 
 }
+
+
+
+//@CrossOrigin(origins = "*")
+
+
+//        OTRA MANERA DE HACERLO
+//        if(!client.getAccounts().stream().anyMatch(account -> account.getNumber().equals(transactionRequestDTO.numberDebit()))){
+//            return new ResponseEntity<>("The origin account is not valid", HttpStatus.FORBIDDEN);
+//        }
+
+
+//@Autowired
+//private ClientRepository clientRepository;
+
+//@Autowired
+//private AccountRepository accountRepository;
+
+//@Autowired
+//private TransactionRepository transactionRepository;
+
+
+//        Boolean accountExist = accountRepository.existsByNumberAndAccountHolder(transactionRequestDTO.numberDebit(), client);
+
+//        Account accountDebit = accountRepository.findByNumber(transactionRequestDTO.numberDebit());

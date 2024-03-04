@@ -3,6 +3,7 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.LoanAplicationDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import com.mindhub.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,30 +15,32 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/clients/current")
-@CrossOrigin(origins = "*")
 public class RequestLoanController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
-    private LoanRepository loanRepository;
+    private AccountService accountService;
+
 
     @Autowired
-    private AccountRepository accountRepository;
+    private LoanService loanService;
 
     @Autowired
-    private TransactionRepository transactionRepository;
+    private TransactionService transactionService;
+
 
     @Autowired
-    private ClientLoanRepository clientLoanRepository;
+    private ClientLoanService clientLoanService;
+
 
 
     @Transactional
     @PostMapping("/loans")
     public ResponseEntity<?> requestLoan (@RequestBody LoanAplicationDTO loanAplicationDTO) {
         String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Client client = clientRepository.findByEmail(userMail);
+        Client client = clientService.getClientByEmail(userMail);
 
         if(loanAplicationDTO.amount() <= 0){
             return new ResponseEntity<>("The amount field cannot be empty", HttpStatus.FORBIDDEN);
@@ -51,7 +54,7 @@ public class RequestLoanController {
             return new ResponseEntity<>("The account field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
-        Loan loan = loanRepository.findById(loanAplicationDTO.id()).orElse(null);
+        Loan loan = loanService.getLoanById(loanAplicationDTO.id());
 
         if(loan == null){
             return new ResponseEntity<>("The selected loan does not exist", HttpStatus.FORBIDDEN);
@@ -66,14 +69,14 @@ public class RequestLoanController {
             return new ResponseEntity<>("The amount of payments must be between " + loan.getPayments(), HttpStatus.FORBIDDEN);
         }
 
-        Boolean accountExist = accountRepository.existsByNumberAndAccountHolder(loanAplicationDTO.numberAccount(), client);
+        Boolean accountExist = accountService.getAccountByNumberAndAccountHolder(loanAplicationDTO.numberAccount(), client);
 
         if(!accountExist){
             return new ResponseEntity<>("The destination account is not valid", HttpStatus.FORBIDDEN);
         }
 
 
-        Account accountCredit = accountRepository.findByNumber(loanAplicationDTO.numberAccount());
+        Account accountCredit = accountService.getAccountByNumber(loanAplicationDTO.numberAccount());
 
         if(accountCredit == null){
             return new ResponseEntity<>("The destination account does not exist " + loan.getPayments(), HttpStatus.FORBIDDEN);
@@ -81,19 +84,44 @@ public class RequestLoanController {
 
 
 
-        ClientLoan clientLoan = new ClientLoan(loanAplicationDTO.amount(), loanAplicationDTO.payments());
+        ClientLoan clientLoan = new ClientLoan((loanAplicationDTO.amount() * 1.2), loanAplicationDTO.payments());
         Transaction transaction = new Transaction(loanAplicationDTO.amount(),loan.getName(), LocalDateTime.now(), TransactionType.CREDIT);
         client.addLoanClient(clientLoan);
         loan.addClientLoan(clientLoan);
         accountCredit.addTransaction(transaction);
-        clientRepository.save(client);
-        accountRepository.save(accountCredit);
-        transactionRepository.save(transaction);
-        loanRepository.save(loan);
-        clientLoanRepository.save(clientLoan);
+        accountCredit.setBalance(accountCredit.getBalance() + loanAplicationDTO.amount());
+        clientService.saveClient(client);
+        accountService.saveAccount(accountCredit);
+        transactionService.saveTransaction(transaction);
+        loanService.saveLoan(loan);
+        clientLoanService.saveClientLoan(clientLoan);
 
 
-        return new ResponseEntity<>("Loan created", HttpStatus.CREATED);
+        return new ResponseEntity<>("Loan created. Total to pay: " + clientLoan.getAmount() + ". " + "Payments: " + clientLoan.getPayments()
+                + ". Unit value of each payment: " + clientLoan.getAmount() / clientLoan.getPayments(), HttpStatus.CREATED);
     }
 
 }
+
+
+
+
+//  @CrossOrigin(origins = "*")
+
+
+//@Autowired
+//private ClientRepository clientRepository;
+
+//@Autowired
+//private AccountRepository accountRepository;
+
+//@Autowired
+//private LoanRepository loanRepository;
+
+
+//@Autowired
+//private TransactionRepository transactionRepository;
+
+
+//@Autowired
+//private ClientLoanRepository clientLoanRepository;

@@ -93,7 +93,6 @@ public class RequestLoanController {
         clientService.saveClient(client);
         accountService.saveAccount(accountCredit);
         transactionService.saveTransaction(transaction);
-        loanService.saveLoan(loan);
         clientLoanService.saveClientLoan(clientLoan);
 
 

@@ -125,6 +125,19 @@ public class HomebankingApplication {
 			Card quainoCreditCardSilver = new Card(CardType.CREDIT, CardColor.SILVER, "1921-1492-0920-2198", "357", LocalDate.now());
 			Card quainoDebitCardTitanium = new Card(CardType.DEBIT, CardColor.TITANIUM, "2879-4569-0514-3214", "963", LocalDate.now());
 
+			morel.addCardClient(morelDebitCardGold);
+			morel.addCardClient(morelCreditCardTitanium);
+
+			quaino.addCardClient(quainoCreditCardSilver);
+			quaino.addCardClient(quainoDebitCardTitanium);
+
+			cardRepository.save(morelDebitCardGold);
+			cardRepository.save(morelCreditCardTitanium);
+			cardRepository.save(quainoCreditCardSilver);
+			cardRepository.save(quainoDebitCardTitanium);
+
+
+
 			// OTRA OPCIÓN SETARLE LOS NOMBRES UNA VEZ CREADA LA CARD. HAY QUE REMOVER LA ÚLTIMA LINEA DEL MÉTODO addCardClient.
 			// morel.addCardClient(morelDebitCardGold);
 			// morelDebitCardGold.setCardholder(morelDebitCardGold.getClient().getFirstName() + " " + morelDebitCardGold.getClient().getLastName());
@@ -144,21 +157,9 @@ public class HomebankingApplication {
 //			cardRepository.save(CreditCardTitanium);
 
 
-			morel.addCardClient(morelDebitCardGold);
-			morel.addCardClient(morelCreditCardTitanium);
 
-			quaino.addCardClient(quainoCreditCardSilver);
-			quaino.addCardClient(quainoDebitCardTitanium);
-
-			cardRepository.save(morelDebitCardGold);
-			cardRepository.save(morelCreditCardTitanium);
-			cardRepository.save(quainoCreditCardSilver);
-			cardRepository.save(quainoDebitCardTitanium);
-
-
-
-			System.out.println(morel);
-			System.out.println(quaino);
+//			System.out.println(morel);
+//			System.out.println(quaino);
 
 
 

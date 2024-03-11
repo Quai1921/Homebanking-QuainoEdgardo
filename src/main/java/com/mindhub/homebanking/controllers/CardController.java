@@ -5,7 +5,6 @@ import com.mindhub.homebanking.dtos.CardRequestDTO;
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.services.CardService;
 import com.mindhub.homebanking.services.ClientService;
-import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +24,6 @@ public class CardController {
     @Autowired
     private CardService cardService;
 
-
-    @Autowired
-    private RandomNumberGenerator randomNumber;
 
 
     @GetMapping("/cards")
@@ -64,13 +60,10 @@ public class CardController {
 
         String cardNumber;
         do {
-            cardNumber = String.format("%04d", randomNumber.getRandomNumber(0, 10000)) + " - "
-                       + String.format("%04d", randomNumber.getRandomNumber(0, 10000)) + " - "
-                       + String.format("%04d", randomNumber.getRandomNumber(0, 10000)) + " - "
-                       + String.format("%04d", randomNumber.getRandomNumber(0, 10000));
+            cardNumber = cardService.getCardNumber();
         } while (cardService.getCardByNumber(cardNumber) != null);
 
-        String cvv = String.format("%03d", randomNumber.getRandomNumber(0, 1000));
+        String cvv = cardService.getCardCVV();
 
 
 
@@ -118,3 +111,17 @@ public class CardController {
 //        List<Card> cards = client.getCards().stream().toList();
 //        return ResponseEntity.ok(cards.stream().map(CardDTO::new).toList());
 //}
+
+
+//    private static String getCardCVV() {
+//        return String.format("%03d", RandomNumberGenerator.getRandomNumber(0, 1000));
+//    }
+
+//    private static String getCardNumber() {
+//        String cardNumber;
+//        cardNumber = String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + " - "
+//                   + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + " - "
+//                   + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + " - "
+//                   + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000));
+//        return cardNumber;
+//    }

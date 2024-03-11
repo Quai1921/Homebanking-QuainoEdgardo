@@ -13,8 +13,10 @@ public class Card {
 
     private String cardholder;
 
+    @Enumerated(EnumType.STRING)
     private CardType type;
 
+    @Enumerated(EnumType.STRING)
     private CardColor color;
 
     private String number;

@@ -32,10 +32,6 @@ public class CreateAccountController {
     private AccountService accountService;
 
 
-    @Autowired
-    private RandomNumberGenerator randomNumber;
-
-
     @GetMapping("/accounts")
     public ResponseEntity<?> getAccounts() {
         String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -56,7 +52,7 @@ public class CreateAccountController {
         if(accounts.size() < 3){
             String accountNumber;
             do {
-                accountNumber = "VIN" + String.format("%08d", randomNumber.getRandomNumber(0, 100000000));
+                accountNumber = "VIN-" + String.format("%08d", RandomNumberGenerator.getRandomNumber(0, 100000000));
             } while (accountService.getAccountByNumber(accountNumber) != null);
 
 

@@ -22,6 +22,10 @@ public interface CardService {
 
     Card getCardByNumber(String number);
 
+    String getCardCVV();
+
+    String getCardNumber();
+
     void saveCard(Card card);
 
 

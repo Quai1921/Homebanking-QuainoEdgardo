@@ -7,6 +7,7 @@ import com.mindhub.homebanking.models.CardType;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.CardRepository;
 import com.mindhub.homebanking.services.CardService;
+import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,29 @@ public class CardServiceimplements implements CardService {
     }
 
     @Override
+    public String getCardCVV() {
+        return String.format("%03d", RandomNumberGenerator.getRandomNumber(0, 1000));
+    }
+
+    @Override
+    public String getCardNumber() {
+        String cardNumber;
+        cardNumber = String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + "-"
+                + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + "-"
+                + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000)) + "-"
+                + String.format("%04d", RandomNumberGenerator.getRandomNumber(0, 10000));
+        return cardNumber;
+    }
+
+    @Override
     public void saveCard(Card card) {
         cardRepository.save(card);
 
     }
+
+
+
+
+
+
 }

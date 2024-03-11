@@ -16,6 +16,7 @@ public class Transaction {
 
     private LocalDateTime date;
 
+    @Enumerated(EnumType.STRING)
     private TransactionType type;
 
     @ManyToOne(fetch = FetchType.EAGER)

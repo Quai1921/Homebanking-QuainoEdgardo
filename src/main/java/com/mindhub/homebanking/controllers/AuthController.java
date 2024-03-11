@@ -39,9 +39,6 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private RandomNumberGenerator randomNumber;
-
-    @Autowired
     private ClientService clientService;
 
     @Autowired
@@ -113,7 +110,7 @@ public class AuthController {
 
         String accountNumber;
         do {
-            accountNumber = "VIN" + randomNumber.getRandomNumber(0, 99999999);
+            accountNumber = "VIN" + RandomNumberGenerator.getRandomNumber(0, 99999999);
         } while (accountService.getAccountByNumber(accountNumber) != null);
 
 

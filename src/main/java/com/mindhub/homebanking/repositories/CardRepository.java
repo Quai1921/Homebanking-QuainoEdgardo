@@ -14,6 +14,7 @@ public interface CardRepository extends JpaRepository<Card, Long> {
 
     Card findByNumber(String number);
 
+
     Boolean existsCardByTypeAndColorAndClient(CardType type, CardColor color, Client client);
 
     List<Card> findCardByClient(Client client);

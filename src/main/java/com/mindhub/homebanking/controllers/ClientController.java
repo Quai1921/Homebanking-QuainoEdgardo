@@ -51,6 +51,7 @@ public class ClientController {
         return ResponseEntity.ok(new ClientDTO(client));
     }
 
+
 }
 
 
@@ -85,11 +86,7 @@ public class ClientController {
 //    }
 
 
-//    @GetMapping("/{id}")
-//    public ClientDTO getOneClientById(@PathVariable Long id){
-//        Client client = clientRepository.findById(id).orElse(null);
-//        return new ClientDTO(client);
-//    }
+
 
 //    @GetMapping("/")
 //    public ResponseEntity<List<ClientDTO>> getAllClients(){

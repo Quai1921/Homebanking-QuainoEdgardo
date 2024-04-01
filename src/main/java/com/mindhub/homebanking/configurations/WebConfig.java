@@ -4,8 +4,8 @@ import com.mindhub.homebanking.filters.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -43,9 +43,10 @@ public class WebConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/api/auth/login", "/api/auth/register","/h2-console/**", "api/loans").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register","/api/loans/").permitAll()
                         .requestMatchers("/api/clients/current", "/api/clients/current/accounts", "/api/clients/current/cards",
-                                                  "/api/clients/current/transactions", "/api/clients/current/loans").hasRole("CLIENT")
+                                                  "/api/clients/current/transactions", "/api/clients/current/loans", "/api/clients/current/accounts/{id}").hasRole("CLIENT")
+                        .requestMatchers("/h2-console/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(sessionManegment -> sessionManegment

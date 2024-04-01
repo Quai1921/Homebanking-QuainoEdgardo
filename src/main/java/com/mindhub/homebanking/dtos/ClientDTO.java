@@ -16,7 +16,6 @@ public class ClientDTO {
 
     private List<ClientLoanDTO> loans;
 
-
     private List<CardDTO> cards;
 
 

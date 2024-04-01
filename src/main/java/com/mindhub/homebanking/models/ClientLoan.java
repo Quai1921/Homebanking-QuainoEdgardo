@@ -13,7 +13,6 @@ public class ClientLoan {
 
     private int payments;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="client_id")
     private Client client;

@@ -1,10 +1,9 @@
 package com.mindhub.homebanking.controllers;
 
+
 import com.mindhub.homebanking.dtos.AccountDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
-import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
 import com.mindhub.homebanking.utilServices.RandomNumberGenerator;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -65,12 +61,33 @@ public class CreateAccountController {
             return new ResponseEntity<> ("Dear client, you reached the maximum number of accounts allowed (3)", HttpStatus.FORBIDDEN);
         }
     }
+
+    @GetMapping("/accounts/{id}")
+    public  ResponseEntity<?> getAccountById(@PathVariable Long id){
+        String userMail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Client client = clientService.getClientByEmail(userMail);
+
+        Account account = accountService.findById(id);
+        if(account != null && account.getAccountHolder().equals(client)){
+            return ResponseEntity.ok(new AccountDTO(account));
+        }
+
+        return new ResponseEntity<>("The account with Id: " + id + " is not found in the database.", HttpStatus.NOT_FOUND);
+    }
+
 }
 
 
 
 
-
+//    @GetMapping("/accounts/{id}")
+//    public  ResponseEntity<?> getAccountById(@PathVariable Long id){
+//        Account account = accountService.findById(id);
+//        if(account == null){
+//            return new ResponseEntity<>("The account with Id: " + id + " is not found in the database.", HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<>(account, HttpStatus.OK);
+//    }
 
 
 //    @Autowired

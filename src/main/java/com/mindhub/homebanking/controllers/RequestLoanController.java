@@ -2,7 +2,6 @@ package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.LoanAplicationDTO;
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.*;
 import com.mindhub.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,7 +53,7 @@ public class RequestLoanController {
             return new ResponseEntity<>("The account field cannot be empty", HttpStatus.FORBIDDEN);
         }
 
-        Loan loan = loanService.getLoanById(loanAplicationDTO.id());
+        Loan loan = loanService.getLoanByName(loanAplicationDTO.loanName());
 
         if(loan == null){
             return new ResponseEntity<>("The selected loan does not exist", HttpStatus.FORBIDDEN);
@@ -75,16 +74,21 @@ public class RequestLoanController {
             return new ResponseEntity<>("The destination account is not valid", HttpStatus.FORBIDDEN);
         }
 
+        Boolean loanExist = clientLoanService.getClientLoanByLoanAndClient(loan, client);
+
+        if(loanExist){
+            return new ResponseEntity<>("You already have a loan of the type " + loanAplicationDTO.loanName(), HttpStatus.FORBIDDEN);
+        }
 
         Account accountCredit = accountService.getAccountByNumber(loanAplicationDTO.numberAccount());
 
         if(accountCredit == null){
-            return new ResponseEntity<>("The destination account does not exist " + loan.getPayments(), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("The destination account is not valid", HttpStatus.FORBIDDEN);
         }
 
 
 
-        ClientLoan clientLoan = new ClientLoan((loanAplicationDTO.amount() * 1.2), loanAplicationDTO.payments());
+        ClientLoan clientLoan = new ClientLoan((loanAplicationDTO.amount() * 1.20), loanAplicationDTO.payments());
         Transaction transaction = new Transaction(loanAplicationDTO.amount(),loan.getName(), LocalDateTime.now(), TransactionType.CREDIT);
         client.addLoanClient(clientLoan);
         loan.addClientLoan(clientLoan);

@@ -21,7 +21,11 @@ public interface AccountService {
 
     Account getAccountByNumber(String number);
 
+    Account findById(long id);
+
     void saveAccount(Account account);
+
+
 
 
 

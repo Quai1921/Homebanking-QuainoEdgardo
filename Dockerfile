@@ -1,4 +1,4 @@
-FROM gradle: 8.5.0-jdk17-alpine
+FROM gradle:8.5.0-jdk17-alpine
 
 COPY . .
 

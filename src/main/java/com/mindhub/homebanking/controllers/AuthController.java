@@ -95,7 +95,7 @@ public class AuthController {
             return new ResponseEntity<>("Password must be at least 8 characters", HttpStatus.FORBIDDEN);
         }
 
-        if(registerDTO.password().contains("@")){
+        if(!registerDTO.email().contains("@")){
             return new ResponseEntity<>("The email entered is not valid", HttpStatus.FORBIDDEN);
         }
 

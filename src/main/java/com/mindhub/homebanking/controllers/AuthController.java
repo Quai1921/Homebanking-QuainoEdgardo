@@ -110,7 +110,7 @@ public class AuthController {
 
         String accountNumber;
         do {
-            accountNumber = "VIN-" + RandomNumberGenerator.getRandomNumber(0, 99999999);
+            accountNumber = "VIN-" + String.format("%08d", RandomNumberGenerator.getRandomNumber(0, 100000000));
         } while (accountService.getAccountByNumber(accountNumber) != null);
 
 
